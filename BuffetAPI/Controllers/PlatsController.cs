@@ -69,6 +69,13 @@ namespace BuffetAPI.Controllers
                 return BadRequest();
             }
 
+            var typePlat = await _context.TypePlat.FindAsync(plat.TypePlatId);
+            if (typePlat == null)
+            {
+                return NotFound($"Le type de plat #{plat.TypePlatId} n'existe pas.");
+
+            }
+            plat.TypePlat = typePlat;
             _context.Entry(plat).State = EntityState.Modified;
 
             try
@@ -95,6 +102,13 @@ namespace BuffetAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Plat>> PostPlat(Plat plat)
         {
+            var typePlat = await _context.TypePlat.FindAsync(plat.TypePlatId);
+            if (typePlat == null)
+            {
+                return NotFound($"Le type de plat #{plat.TypePlatId} n'existe pas.");
+
+            }
+            plat.TypePlat = typePlat;
             _context.Plat.Add(plat);
             await _context.SaveChangesAsync();
 
