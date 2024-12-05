@@ -12,14 +12,16 @@ namespace BuffetAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlatsController(BuffetAPIContext context) : ControllerBase
+    public class PlatsController(BuffetAPIContext context, ILogger<PlatsController> logger) : ControllerBase
     {
         private readonly BuffetAPIContext _context = context;
+        private readonly ILogger<PlatsController> _logger = logger;
 
         // GET: api/Plats/citation
         [HttpGet("citation")]
         public ActionResult<string> GetCitation()
         {
+            _logger.LogInformation("On m'a demandé la citation");
             return Ok("Bienvenue au buffet!");
         }
 
@@ -72,6 +74,7 @@ namespace BuffetAPI.Controllers
             var typePlat = await _context.TypePlat.FindAsync(plat.TypePlatId);
             if (typePlat == null)
             {
+                _logger.LogWarning("Le client a demandé le type plat {Typeplat}, qui n'existe pas.", plat.TypePlatId);
                 return NotFound($"Le type de plat #{plat.TypePlatId} n'existe pas.");
 
             }
@@ -82,8 +85,9 @@ namespace BuffetAPI.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
+                _logger.LogError("Exception {e}", ex.Message);
                 if (!PlatExists(id))
                 {
                     return NotFound();
