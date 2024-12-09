@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BuffetAPI.Models;
 using BuffetAPI.Configurations;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BuffetAPI.Data
 {
-    public class BuffetAPIContext(DbContextOptions<BuffetAPIContext> options) : DbContext(options)
+    public class BuffetAPIContext(DbContextOptions<BuffetAPIContext> options) : IdentityDbContext<IdentityUser>(options)
     {
         public DbSet<Plat> Plat { get; set; } = default!;
         public DbSet<TypePlat> TypePlat { get; set; } = default!;
