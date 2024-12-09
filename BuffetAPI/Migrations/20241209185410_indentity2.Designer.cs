@@ -4,6 +4,7 @@ using BuffetAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BuffetAPI.Migrations
 {
     [DbContext(typeof(BuffetAPIContext))]
-    partial class BuffetAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20241209185410_indentity2")]
+    partial class indentity2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,26 +144,6 @@ namespace BuffetAPI.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "db6bbf2e-5a54-433b-8b1a-c3a68f0a4ded",
-                            Name = "Administrateurr",
-                            NormalizedName = "ADMINISTRATEURR"
-                        },
-                        new
-                        {
-                            Id = "68139d9a-da24-4876-b441-c2788ee16d48",
-                            Name = "Cuisinier",
-                            NormalizedName = "CUISINIER"
-                        },
-                        new
-                        {
-                            Id = "8fb41309-af83-4723-a3f3-9620769561ef",
-                            Name = "Ogre",
-                            NormalizedName = "OGRE"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

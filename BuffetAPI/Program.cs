@@ -2,6 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using BuffetAPI.Data;
 using Serilog;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using BuffetAPI.Auth;
 
 namespace BuffetAPI
 {
@@ -14,7 +20,12 @@ namespace BuffetAPI
                 options.UseSqlServer(builder.Configuration.GetConnectionString("BuffetAPIContext") ?? throw new InvalidOperationException("Connection string 'BuffetAPIContext' not found.")));
 
             // Add services to the container.
-
+            /**/
+            builder.Services.AddIdentityCore<IdentityUser>()
+                .AddRoles<IdentityRole>()
+                /*?*/.AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("HotelListingApi")
+                .AddEntityFrameworkStores<BuffetAPIContext>()
+                .AddDefaultTokenProviders();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -25,6 +36,27 @@ namespace BuffetAPI
                 config.WriteTo.Console().ReadFrom.Configuration(context.Configuration);
             });
 
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.SaveToken = true;
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidAudience = builder.Configuration["JWT:Audience"],
+                        ValidIssuer = builder.Configuration["JWT:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+                    };
+                });
+            builder.Services.AddScoped<IAuthManager, AuthManager>();
             var app = builder.Build();
             /*...*/
             // Configure the HTTP request pipeline.
@@ -37,8 +69,9 @@ namespace BuffetAPI
 
             app.UseHttpsRedirection();
 
+            /**/
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

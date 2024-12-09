@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BuffetAPI.Data;
-using BuffetAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BuffetAPI.Controllers
 {
@@ -27,6 +27,7 @@ namespace BuffetAPI.Controllers
 
         // GET: api/Plats/favori
         [HttpGet("favori")]
+        [Authorize]
         public async Task<ActionResult<Plat>> GetFavori()
         {
             var plat = await _context.Plat.FindAsync(2);
@@ -42,6 +43,7 @@ namespace BuffetAPI.Controllers
 
         // GET: api/Plats
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Plat>>> GetPlat()
         {
             return await _context.Plat.ToListAsync();
@@ -49,6 +51,7 @@ namespace BuffetAPI.Controllers
 
         // GET: api/Plats/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<Plat>> GetPlat(int id)
         {
             var plat = await _context.Plat.Include(p => p.TypePlat).FirstOrDefaultAsync(p => p.Id == id);
@@ -64,6 +67,7 @@ namespace BuffetAPI.Controllers
         // PUT: api/Plats/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Cuisinier")]
         public async Task<IActionResult> PutPlat(int id, Plat plat)
         {
             if (id != plat.Id)
@@ -104,6 +108,7 @@ namespace BuffetAPI.Controllers
         // POST: api/Plats
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Cuisinier")]
         public async Task<ActionResult<Plat>> PostPlat(Plat plat)
         {
             var typePlat = await _context.TypePlat.FindAsync(plat.TypePlatId);
@@ -120,6 +125,7 @@ namespace BuffetAPI.Controllers
         }
 
         // DELETE: api/Plats/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlat(int id)
         {
