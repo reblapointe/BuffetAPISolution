@@ -53,7 +53,7 @@ namespace BuffetAPI.Auth
 
         public async Task<IEnumerable<IdentityError>> RegisterCuisinier(Register register)
         {
-            IdentityUser user = new IdentityUser
+            IdentityUser user = new()
             {
                 UserName = register.Username,
                 Email = register.Email

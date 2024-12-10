@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace BuffetAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class PlatsController(BuffetAPIContext context, ILogger<PlatsController> logger) : ControllerBase
     {
@@ -19,6 +20,7 @@ namespace BuffetAPI.Controllers
 
         // GET: api/Plats/citation
         [HttpGet("citation")]
+        [AllowAnonymous]
         public ActionResult<string> GetCitation()
         {
             _logger.LogInformation("On m'a demandé la citation");
