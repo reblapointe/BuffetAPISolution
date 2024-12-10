@@ -13,8 +13,6 @@ namespace BuffetAPI.Auth
         private readonly IConfiguration _configuration = configuration;
         private IdentityUser _user;
 
-        private const string _loginProvider = "BuffetApi";
-
         public async Task<AuthResponse> Login(Login login)
         {
             _user = await _userManager.FindByNameAsync(login.Username);
@@ -53,7 +51,7 @@ namespace BuffetAPI.Auth
 
         public async Task<IEnumerable<IdentityError>> RegisterCuisinier(Register register)
         {
-            IdentityUser user = new()
+            IdentityUser user = new IdentityUser
             {
                 UserName = register.Username,
                 Email = register.Email
