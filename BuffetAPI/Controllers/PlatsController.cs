@@ -83,7 +83,7 @@ namespace BuffetAPI.Controllers
             if (platModifie == null)
                 return BadRequest();
 
-            if (!HttpContext.User.IsInRole("Administrateur") && 
+            if (!HttpContext.User.IsInRole("Administrateur") &&
                 (platModifie.CuisinierId == null || platModifie.CuisinierId != GetUserName()))
                 return Unauthorized();
 
@@ -98,7 +98,8 @@ namespace BuffetAPI.Controllers
             platModifie.Nom = plat.Nom;
             platModifie.Prix = plat.Prix;
             platModifie.TypePlatId = plat.TypePlatId;
-            platModifie.CuisinierId = plat.CuisinierId;
+            if (HttpContext.User.IsInRole("Administrateur"))
+                platModifie.CuisinierId = plat.CuisinierId;
 
             try
             {
