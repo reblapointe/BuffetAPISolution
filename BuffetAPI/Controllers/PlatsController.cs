@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BuffetAPI.Data;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace BuffetAPI.Controllers
 {
@@ -70,12 +72,20 @@ namespace BuffetAPI.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize(Roles = "Cuisinier")]
-        public async Task<IActionResult> PutPlat(int id, Plat plat)
+        public async Task<IActionResult> PutPlat(int id, Plat plat) //dto
         {
             if (id != plat.Id)
             {
                 return BadRequest();
             }
+
+            var platModifie = await _context.Plat.FindAsync(id);
+            if (platModifie == null)
+                return BadRequest();
+
+            if (platModifie.CuisinierId == null || platModifie.CuisinierId != GetUserName())
+                return Unauthorized();
+
 
             var typePlat = await _context.TypePlat.FindAsync(plat.TypePlatId);
             if (typePlat == null)
@@ -84,8 +94,9 @@ namespace BuffetAPI.Controllers
                 return NotFound($"Le type de plat #{plat.TypePlatId} n'existe pas.");
 
             }
-            plat.TypePlat = typePlat;
-            _context.Entry(plat).State = EntityState.Modified;
+            platModifie.Nom = plat.Nom;
+            platModifie.Prix = plat.Prix;
+            platModifie.TypePlatId = plat.TypePlatId;
 
             try
             {
@@ -111,8 +122,12 @@ namespace BuffetAPI.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Roles = "Cuisinier")]
-        public async Task<ActionResult<Plat>> PostPlat(Plat plat)
+        public async Task<ActionResult<Plat>> PostPlat(Plat plat) //dto
         {
+            plat.CuisinierId = GetUserName();
+            if (plat.CuisinierId == null)
+                return Unauthorized();
+
             var typePlat = await _context.TypePlat.FindAsync(plat.TypePlatId);
             if (typePlat == null)
             {
@@ -146,6 +161,13 @@ namespace BuffetAPI.Controllers
         private bool PlatExists(int id)
         {
             return _context.Plat.Any(e => e.Id == id);
+        }
+
+        private string? GetUserName()
+        {
+            return HttpContext.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
+                       ?? HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
         }
     }
 }

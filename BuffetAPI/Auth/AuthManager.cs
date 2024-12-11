@@ -75,6 +75,7 @@ namespace BuffetAPI.Auth
 
             var claims = new List<Claim>
             {
+                new (JwtRegisteredClaimNames.Name, _user.UserName),
                 new (JwtRegisteredClaimNames.Sub, _user.UserName),
                 new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new (JwtRegisteredClaimNames.Email, _user.Email),             
