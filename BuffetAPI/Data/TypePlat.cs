@@ -1,4 +1,4 @@
-﻿namespace BuffetAPI.Models
+﻿namespace BuffetAPI.Data
 {
     public class TypePlat
     {
