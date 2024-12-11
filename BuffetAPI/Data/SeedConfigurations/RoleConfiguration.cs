@@ -11,8 +11,8 @@ namespace BuffetAPI.Data.SeedConfigurations
             builder.HasData(
                 new IdentityRole
                 {
-                    Name = "Administrateurr",
-                    NormalizedName = "ADMINISTRATEURR"
+                    Name = "Administrateur",
+                    NormalizedName = "ADMINISTRATEUR"
                 },
                 new IdentityRole
                 {

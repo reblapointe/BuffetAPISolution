@@ -71,8 +71,8 @@ namespace BuffetAPI.Controllers
         // PUT: api/Plats/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        [Authorize(Roles = "Cuisinier")]
-        public async Task<IActionResult> PutPlat(int id, Plat plat) //dto
+        [Authorize(Roles = "Cuisinier,Administrateur")]
+        public async Task<IActionResult> PutPlat(int id, Plat plat)
         {
             if (id != plat.Id)
             {
@@ -83,7 +83,8 @@ namespace BuffetAPI.Controllers
             if (platModifie == null)
                 return BadRequest();
 
-            if (platModifie.CuisinierId == null || platModifie.CuisinierId != GetUserName())
+            if (!HttpContext.User.IsInRole("Administrateur") && 
+                (platModifie.CuisinierId == null || platModifie.CuisinierId != GetUserName()))
                 return Unauthorized();
 
 
@@ -97,6 +98,7 @@ namespace BuffetAPI.Controllers
             platModifie.Nom = plat.Nom;
             platModifie.Prix = plat.Prix;
             platModifie.TypePlatId = plat.TypePlatId;
+            platModifie.CuisinierId = plat.CuisinierId;
 
             try
             {
@@ -121,8 +123,8 @@ namespace BuffetAPI.Controllers
         // POST: api/Plats
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize(Roles = "Cuisinier")]
-        public async Task<ActionResult<Plat>> PostPlat(Plat plat) //dto
+        [Authorize(Roles = "Cuisinier,Administrateur")]
+        public async Task<ActionResult<Plat>> PostPlat(Plat plat)
         {
             plat.CuisinierId = GetUserName();
             if (plat.CuisinierId == null)

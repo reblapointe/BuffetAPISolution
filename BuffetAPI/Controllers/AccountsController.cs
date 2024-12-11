@@ -59,7 +59,7 @@ namespace BuffetAPI.Controllers
             return Ok();
         }
 
-        // POST: api/Account/register
+        // POST: api/Account/login
         [HttpPost]
         [Route("login")]
         public async Task<ActionResult> Login([FromBody] Models.Login login)
