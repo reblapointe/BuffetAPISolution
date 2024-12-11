@@ -1,9 +1,9 @@
-﻿using BuffetAPI.Models;
+﻿using BuffetAPI.Data;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BuffetAPI.Configurations
+namespace BuffetAPI.Data.SeedConfigurations
 {
     public class TypePlatConfiguration : IEntityTypeConfiguration<TypePlat>
     {

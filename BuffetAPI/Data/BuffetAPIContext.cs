@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using BuffetAPI.Models;
-using BuffetAPI.Configurations;
+using BuffetAPI.Data.SeedConfigurations;
 
 namespace BuffetAPI.Data
 {

@@ -6,20 +6,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BuffetAPI.Data;
-using BuffetAPI.Models;
 
 namespace BuffetAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TypePlatsController : ControllerBase
+    public class TypePlatsController(BuffetAPIContext context) : ControllerBase
     {
-        private readonly BuffetAPIContext _context;
-
-        public TypePlatsController(BuffetAPIContext context)
-        {
-            _context = context;
-        }
+        private readonly BuffetAPIContext _context = context;
 
         // GET: api/TypePlats
         [HttpGet]
