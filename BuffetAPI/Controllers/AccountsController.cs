@@ -1,5 +1,5 @@
 ﻿using BuffetAPI.Auth;
-using BuffetAPI.Models;
+using BuffetAPI.Models.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
@@ -17,7 +17,7 @@ namespace BuffetAPI.Controllers
         // POST: api/Account/register-ogre
         [HttpPost]
         [Route("register-ogre")]
-        public async Task<ActionResult> RegisterOgre([FromBody] Models.Register register)
+        public async Task<ActionResult> RegisterOgre(RegisterDTO register)
         {
             _logger.LogInformation("Tentative d'enregistrement d'un nouvel ogre pour {email}, {name}", register.Email, register.Username);
             var errors = await _authManager.RegisterOgre(register);
@@ -39,7 +39,7 @@ namespace BuffetAPI.Controllers
         // POST: api/Account/register-cuisinier
         [HttpPost]
         [Route("register-cuisinier")]
-        public async Task<ActionResult> RegisterCuisinier([FromBody] Models.Register register)
+        public async Task<ActionResult> RegisterCuisinier(RegisterDTO register)
         {
             _logger.LogInformation("Tentative d'enregistrement d'un nouveau cuisinier pour {email}, {name}", register.Email, register.Username);
             var errors = await _authManager.RegisterCuisinier(register);
@@ -62,7 +62,7 @@ namespace BuffetAPI.Controllers
         // POST: api/Account/login
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult> Login([FromBody] Models.Login login)
+        public async Task<ActionResult> Login(LoginDTO login)
         {
             var authResponse = await _authManager.Login(login);
             if (authResponse is null)

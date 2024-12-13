@@ -9,16 +9,20 @@ using BuffetAPI.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using BuffetAPI.Models.Plats;
+using AutoMapper;
+using System.Diagnostics.Metrics;
 
 namespace BuffetAPI.Controllers
 {
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class PlatsController(BuffetAPIContext context, ILogger<PlatsController> logger) : ControllerBase
+    public class PlatsController(BuffetAPIContext context, ILogger<PlatsController> logger, IMapper mapper) : ControllerBase
     {
         private readonly BuffetAPIContext _context = context;
         private readonly ILogger<PlatsController> _logger = logger;
+        private readonly IMapper _mapper = mapper;
 
         // GET: api/Plats/citation
         [HttpGet("citation")]
@@ -31,7 +35,7 @@ namespace BuffetAPI.Controllers
 
         // POST: api/Plats/manger/id
         [HttpPost("manger/{id}")]
-        public async Task<ActionResult<Plat>> Manger(int id)
+        public async Task<ActionResult<GetPlatDTO>> Manger(int id)
         {
             try
             {
@@ -51,7 +55,7 @@ namespace BuffetAPI.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return plat;
+                return _mapper.Map<GetPlatDTO­>(plat);
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -64,15 +68,17 @@ namespace BuffetAPI.Controllers
         // GET: api/Plats
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<Plat>>> GetPlat()
+        public async Task<ActionResult<IEnumerable<GetPlatDTO>>> GetPlat()
         {
-            return await _context.Plat.ToListAsync();
+            var plats = await _context.Plat.ToListAsync();
+            var platsDTO = _mapper.Map<List<GetPlatDTO>>(plats);
+            return Ok(platsDTO);
         }
 
         // GET: api/Plats/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Plat>> GetPlat(int id)
+        public async Task<ActionResult<GetPlatDTO>> GetPlat(int id)
         {
             var plat = await _context.Plat.Include(p => p.TypePlat).FirstOrDefaultAsync(p => p.Id == id);
 
@@ -81,41 +87,39 @@ namespace BuffetAPI.Controllers
                 return NotFound();
             }
 
-            return plat;
+            return _mapper.Map<GetPlatDTO­>(plat);
         }
 
         // PUT: api/Plats/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize(Roles = "Cuisinier,Administrateur")]
-        public async Task<IActionResult> PutPlat(int id, Plat plat)
+        public async Task<IActionResult> PutPlat(int id, PutPlatDTO platDto)
         {
-            if (id != plat.Id)
+            if (id != platDto.Id)
             {
                 return BadRequest();
             }
 
-            var platModifie = await _context.Plat.FindAsync(id);
-            if (platModifie == null)
+            var plat = await _context.Plat.FindAsync(id);
+            if (plat == null)
                 return BadRequest();
 
             if (!HttpContext.User.IsInRole("Administrateur") &&
-                (platModifie.CuisinierId == null || platModifie.CuisinierId != GetUserName()))
+                (plat.CuisinierId == null || plat.CuisinierId != GetUserName()))
                 return Unauthorized();
 
 
-            var typePlat = await _context.TypePlat.FindAsync(plat.TypePlatId);
+            var typePlat = await _context.TypePlat.FindAsync(platDto.TypePlatId);
             if (typePlat == null)
             {
-                _logger.LogWarning("Le client a demandé le type plat {Typeplat}, qui n'existe pas.", plat.TypePlatId);
-                return NotFound($"Le type de plat #{plat.TypePlatId} n'existe pas.");
+                _logger.LogWarning("Le client a demandé le type plat {Typeplat}, qui n'existe pas.", platDto.TypePlatId);
+                return NotFound($"Le type de plat #{platDto.TypePlatId} n'existe pas.");
 
             }
-            platModifie.Nom = plat.Nom;
-            platModifie.Prix = plat.Prix;
-            platModifie.TypePlatId = plat.TypePlatId;
-            if (HttpContext.User.IsInRole("Administrateur"))
-                platModifie.CuisinierId = plat.CuisinierId;
+            if (!HttpContext.User.IsInRole("Administrateur"))
+                platDto.CuisinierId = plat.CuisinierId;
+            _mapper.Map(platDto, plat);
 
             try
             {
@@ -141,8 +145,9 @@ namespace BuffetAPI.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Roles = "Cuisinier,Administrateur")]
-        public async Task<ActionResult<Plat>> PostPlat(Plat plat)
+        public async Task<ActionResult<GetPlatDTO>> PostPlat(PostPlatDTO platDto)
         {
+            var plat = _mapper.Map<Plat>(platDto);
             plat.CuisinierId = GetUserName();
             if (plat.CuisinierId == null)
                 return Unauthorized();
@@ -154,10 +159,12 @@ namespace BuffetAPI.Controllers
 
             }
             plat.TypePlat = typePlat;
+            plat.Mange = false;
+            plat.OgreId = null;
             _context.Plat.Add(plat);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPlat", new { id = plat.Id }, plat);
+            return CreatedAtAction("GetPlat", new { id = plat.Id }, _mapper.Map<GetPlatDTO>(plat));
         }
 
         // DELETE: api/Plats/5
