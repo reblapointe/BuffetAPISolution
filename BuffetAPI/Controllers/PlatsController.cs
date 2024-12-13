@@ -31,8 +31,6 @@ namespace BuffetAPI.Controllers
         [HttpPost("manger")]
         public async Task<ActionResult<Plat>> Manger(int id)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
-
             var plat = await _context.Plat.FindAsync(id);
 
             if (plat == null || plat.Mange)
@@ -43,7 +41,6 @@ namespace BuffetAPI.Controllers
 
             plat.Mange = true;
             await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
 
             return plat;
         }
