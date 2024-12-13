@@ -29,17 +29,24 @@ namespace BuffetAPI.Controllers
             return Ok("Bienvenue au buffet!");
         }
 
-        // GET: api/Plats/favori
-        [HttpGet("favori")]
-        [Authorize]
-        public async Task<ActionResult<Plat>> GetFavori()
+        // POST: api/Plats/manger/id
+        [HttpPost("manger/{id}")]
+        public async Task<ActionResult<Plat>> Manger(int id)
         {
-            var plat = await _context.Plat.FindAsync(2);
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            if (plat == null)
+            var plat = await _context.Plat.FindAsync(id);
+
+            if (plat == null || plat.Mange)
             {
-                return NotFound();
+                _logger.LogWarning("Le client a demandé le plat {id}, qui n'existe pas, ou qui a déjà été mangé.", id);
+                return NotFound(new { Message = "Le plat demandé n'existe pas, ou a déjà été mangé." });
             }
+
+            plat.Mange = true;
+            plat.OgreId = GetUserName();
+            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
 
             return plat;
         }
@@ -145,8 +152,8 @@ namespace BuffetAPI.Controllers
         }
 
         // DELETE: api/Plats/5
-        [Authorize]
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Cuisinier,Administrateur")]
         public async Task<IActionResult> DeletePlat(int id)
         {
             var plat = await _context.Plat.FindAsync(id);
@@ -154,6 +161,10 @@ namespace BuffetAPI.Controllers
             {
                 return NotFound();
             }
+            if (!HttpContext.User.IsInRole("Administrateur") &&
+                (plat.CuisinierId == null || plat.CuisinierId != GetUserName()))
+                return Unauthorized();
+
 
             _context.Plat.Remove(plat);
             await _context.SaveChangesAsync();
@@ -170,7 +181,6 @@ namespace BuffetAPI.Controllers
         {
             return HttpContext.User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
                        ?? HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
         }
     }
 }
