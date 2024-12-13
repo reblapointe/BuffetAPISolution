@@ -22,20 +22,22 @@ namespace BuffetAPI.Controllers
             return Ok("Bienvenue au buffet!");
         }
 
-        // GET: api/Plats/favori
-        [HttpGet("favori")]
-        public async Task<ActionResult<Plat>> GetFavori()
+        // POST: api/Plats/manger/id
+        [HttpPost("manger")]
+        public async Task<ActionResult<Plat>> Manger(int id)
         {
-            var plat = await _context.Plat.FindAsync(2);
+            var plat = await _context.Plat.FindAsync(id);
 
-            if (plat == null)
+            if (plat == null || plat.Mange)
             {
-                return NotFound();
+                return NotFound(new { Message = "Le plat demandé n'existe pas, ou a déjà été mangé." });
             }
+
+            plat.Mange = true;
+            await _context.SaveChangesAsync();
 
             return plat;
         }
-
 
         // GET: api/Plats
         [HttpGet]
