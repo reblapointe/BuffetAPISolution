@@ -50,7 +50,6 @@ namespace BuffetAPI.Controllers
 
         // GET: api/Plats
         [HttpGet]
-        [Authorize]
         public async Task<ActionResult<IEnumerable<Plat>>> GetPlat()
         {
             return await _context.Plat.ToListAsync();
@@ -58,7 +57,6 @@ namespace BuffetAPI.Controllers
 
         // GET: api/Plats/5
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<ActionResult<Plat>> GetPlat(int id)
         {
             var plat = await _context.Plat.Include(p => p.TypePlat).FirstOrDefaultAsync(p => p.Id == id);
@@ -132,8 +130,8 @@ namespace BuffetAPI.Controllers
         }
 
         // DELETE: api/Plats/5
-        [Authorize]
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Cuisinier")]
         public async Task<IActionResult> DeletePlat(int id)
         {
             var plat = await _context.Plat.FindAsync(id);
