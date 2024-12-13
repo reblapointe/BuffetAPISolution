@@ -2,8 +2,6 @@
 using BuffetAPI.Models.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Newtonsoft.Json.Linq;
 
 namespace BuffetAPI.Controllers
 {
