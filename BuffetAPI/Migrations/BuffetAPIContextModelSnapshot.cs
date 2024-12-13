@@ -49,6 +49,11 @@ namespace BuffetAPI.Migrations
                     b.Property<int>("TypePlatId")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TypePlatId");
@@ -160,19 +165,19 @@ namespace BuffetAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b188aca5-b612-4521-8ec0-3e5be97ba604",
+                            Id = "d8167db1-6ba2-4ab1-85d4-b59ec868e7f4",
                             Name = "Administrateur",
                             NormalizedName = "ADMINISTRATEUR"
                         },
                         new
                         {
-                            Id = "5ff40d0f-2cc2-4c0c-8176-08ac29fb4148",
+                            Id = "58bf3f2c-150e-4863-9c0b-a18bfb17f398",
                             Name = "Cuisinier",
                             NormalizedName = "CUISINIER"
                         },
                         new
                         {
-                            Id = "f0d3a57f-c330-48b1-9941-6d791e5eb12e",
+                            Id = "7070fb5b-8146-44eb-8f98-7542e55dd618",
                             Name = "Ogre",
                             NormalizedName = "OGRE"
                         });

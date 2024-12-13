@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace BuffetAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Identity : Migration
+    public partial class Plats : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +50,19 @@ namespace BuffetAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TypePlat",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nom = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TypePlat", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,6 +171,63 @@ namespace BuffetAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Plat",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nom = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Prix = table.Column<double>(type: "float", nullable: true),
+                    Mange = table.Column<bool>(type: "bit", nullable: false),
+                    OgreId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TypePlatId = table.Column<int>(type: "int", nullable: false),
+                    CuisinierId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Version = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Plat", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Plat_TypePlat_TypePlatId",
+                        column: x => x.TypePlatId,
+                        principalTable: "TypePlat",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "58bf3f2c-150e-4863-9c0b-a18bfb17f398", null, "Cuisinier", "CUISINIER" },
+                    { "7070fb5b-8146-44eb-8f98-7542e55dd618", null, "Ogre", "OGRE" },
+                    { "d8167db1-6ba2-4ab1-85d4-b59ec868e7f4", null, "Administrateur", "ADMINISTRATEUR" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "TypePlat",
+                columns: new[] { "Id", "Nom" },
+                values: new object[,]
+                {
+                    { 1, "Végétarien" },
+                    { 2, "Carnivore" },
+                    { 3, "Sucrerie" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Plat",
+                columns: new[] { "Id", "CuisinierId", "Mange", "Nom", "OgreId", "Prix", "TypePlatId" },
+                values: new object[,]
+                {
+                    { 1, null, false, "Biscuit Double gingembre", null, 2.25, 3 },
+                    { 2, null, false, "Biscuit Brisures de chocolat", null, 2.25, 3 },
+                    { 3, null, false, "Biscuit Amaretti", null, 2.25, 3 },
+                    { 4, null, false, "Biscuit S'mores au beurre noisette", null, 2.25, 3 },
+                    { 5, null, false, "Biscuit Canneberges", null, 2.25, 3 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,6 +266,11 @@ namespace BuffetAPI.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plat_TypePlatId",
+                table: "Plat",
+                column: "TypePlatId");
         }
 
         /// <inheritdoc />
@@ -215,10 +292,16 @@ namespace BuffetAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Plat");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "TypePlat");
         }
     }
 }

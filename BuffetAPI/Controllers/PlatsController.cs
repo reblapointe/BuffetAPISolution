@@ -33,22 +33,31 @@ namespace BuffetAPI.Controllers
         [HttpPost("manger/{id}")]
         public async Task<ActionResult<Plat>> Manger(int id)
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
-
-            var plat = await _context.Plat.FindAsync(id);
-
-            if (plat == null || plat.Mange)
+            try
             {
-                _logger.LogWarning("Le client a demandé le plat {id}, qui n'existe pas, ou qui a déjà été mangé.", id);
-                return NotFound(new { Message = "Le plat demandé n'existe pas, ou a déjà été mangé." });
+                var plat = await _context.Plat.FindAsync(id);
+
+                if (plat == null)
+                {
+                    return NotFound(new { Message = "Le plat demandé n'existe pas." });
+                }
+                if (plat.Mange)
+                {
+                    return BadRequest(new { Message = "Le plat est déjà mangé." });
+                }
+
+                plat.Mange = true;
+                plat.OgreId = GetUserName();
+
+                await _context.SaveChangesAsync();
+
+                return plat;
             }
-
-            plat.Mange = true;
-            plat.OgreId = GetUserName();
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-
-            return plat;
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError("Exception {e}", ex.Message);
+                return StatusCode(500, new { Message = "Une erreur est survenue.", Error = ex.Message });
+            }
         }
 
 
