@@ -9,8 +9,8 @@ namespace BuffetAPI.Data
 {
     public class BuffetAPIContext(DbContextOptions<BuffetAPIContext> options) : DbContext(options)
     {
-        public DbSet<Plat> Plat { get; set; } = default!;
-        public DbSet<TypePlat> TypePlat { get; set; } = default!;
+        public DbSet<Plat> Plats { get; set; } = default!;
+        public DbSet<TypePlat> TypePlats { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

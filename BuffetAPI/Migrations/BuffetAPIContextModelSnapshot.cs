@@ -47,7 +47,7 @@ namespace BuffetAPI.Migrations
 
                     b.HasIndex("TypePlatId");
 
-                    b.ToTable("Plat");
+                    b.ToTable("Plats");
 
                     b.HasData(
                         new
@@ -106,7 +106,7 @@ namespace BuffetAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TypePlat");
+                    b.ToTable("TypePlats");
 
                     b.HasData(
                         new

@@ -11,9 +11,14 @@ namespace BuffetAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlatsController(BuffetAPIContext context) : ControllerBase
+    public class PlatsController : ControllerBase
     {
-        private readonly BuffetAPIContext _context = context;
+        private readonly BuffetAPIContext _context;
+
+        public PlatsController(BuffetAPIContext context)
+        {
+            _context = context;
+        }
 
         // GET: api/Plats/citation
         [HttpGet("citation")]
@@ -23,10 +28,10 @@ namespace BuffetAPI.Controllers
         }
 
         // POST: api/Plats/manger/id
-        [HttpPost("manger")]
+        [HttpPost("manger/{id}")]
         public async Task<ActionResult<Plat>> Manger(int id)
         {
-            var plat = await _context.Plat.FindAsync(id);
+            var plat = await _context.Plats.FindAsync(id);
 
             if (plat == null || plat.Mange)
             {
@@ -43,14 +48,14 @@ namespace BuffetAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Plat>>> GetPlat()
         {
-            return await _context.Plat.ToListAsync();
+            return await _context.Plats.ToListAsync();
         }
 
         // GET: api/Plats/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Plat>> GetPlat(int id)
         {
-            var plat = await _context.Plat.Include(p => p.TypePlat).FirstOrDefaultAsync(p => p.Id == id);
+            var plat = await _context.Plats.Include(p => p.TypePlat).FirstOrDefaultAsync(p => p.Id == id);
 
             if (plat == null)
             {
@@ -70,7 +75,7 @@ namespace BuffetAPI.Controllers
                 return BadRequest();
             }
 
-            var typePlat = await _context.TypePlat.FindAsync(plat.TypePlatId);
+            var typePlat = await _context.TypePlats.FindAsync(plat.TypePlatId);
             if (typePlat == null)
             {
                 return NotFound($"Le type de plat #{plat.TypePlatId} n'existe pas.");
@@ -103,14 +108,14 @@ namespace BuffetAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Plat>> PostPlat(Plat plat)
         {
-            var typePlat = await _context.TypePlat.FindAsync(plat.TypePlatId);
+            var typePlat = await _context.TypePlats.FindAsync(plat.TypePlatId);
             if (typePlat == null)
             {
                 return NotFound($"Le type de plat #{plat.TypePlatId} n'existe pas.");
 
             }
             plat.TypePlat = typePlat;
-            _context.Plat.Add(plat);
+            _context.Plats.Add(plat);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPlat", new { id = plat.Id }, plat);
@@ -120,13 +125,13 @@ namespace BuffetAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlat(int id)
         {
-            var plat = await _context.Plat.FindAsync(id);
+            var plat = await _context.Plats.FindAsync(id);
             if (plat == null)
             {
                 return NotFound();
             }
 
-            _context.Plat.Remove(plat);
+            _context.Plats.Remove(plat);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -134,7 +139,7 @@ namespace BuffetAPI.Controllers
 
         private bool PlatExists(int id)
         {
-            return _context.Plat.Any(e => e.Id == id);
+            return _context.Plats.Any(e => e.Id == id);
         }
     }
 }

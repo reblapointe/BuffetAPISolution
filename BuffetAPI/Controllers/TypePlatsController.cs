@@ -19,14 +19,14 @@ namespace BuffetAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TypePlat>>> GetTypePlat()
         {
-            return await _context.TypePlat.ToListAsync();
+            return await _context.TypePlats.ToListAsync();
         }
 
         // GET: api/TypePlats/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TypePlat>> GetTypePlat(int id)
         {
-            var typePlat = await _context.TypePlat.FindAsync(id);
+            var typePlat = await _context.TypePlats.FindAsync(id);
 
             if (typePlat == null)
             {
