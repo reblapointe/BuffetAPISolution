@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BuffetAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Plats : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -201,9 +201,9 @@ namespace BuffetAPI.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "58bf3f2c-150e-4863-9c0b-a18bfb17f398", null, "Cuisinier", "CUISINIER" },
-                    { "7070fb5b-8146-44eb-8f98-7542e55dd618", null, "Ogre", "OGRE" },
-                    { "d8167db1-6ba2-4ab1-85d4-b59ec868e7f4", null, "Administrateur", "ADMINISTRATEUR" }
+                    { "0c944199-6b63-4042-a6b5-7d8bfb208602", null, "Cuisinier", "CUISINIER" },
+                    { "1cfb8740-1ce9-4997-ba28-c2539f92e7d3", null, "Administrateur", "ADMINISTRATEUR" },
+                    { "744b93a7-b473-47b5-8ab5-d78363689662", null, "Ogre", "OGRE" }
                 });
 
             migrationBuilder.InsertData(
@@ -221,11 +221,11 @@ namespace BuffetAPI.Migrations
                 columns: new[] { "Id", "CuisinierId", "Mange", "Nom", "OgreId", "Prix", "TypePlatId" },
                 values: new object[,]
                 {
-                    { 1, null, false, "Biscuit Double gingembre", null, 2.25, 3 },
-                    { 2, null, false, "Biscuit Brisures de chocolat", null, 2.25, 3 },
-                    { 3, null, false, "Biscuit Amaretti", null, 2.25, 3 },
-                    { 4, null, false, "Biscuit S'mores au beurre noisette", null, 2.25, 3 },
-                    { 5, null, false, "Biscuit Canneberges", null, 2.25, 3 }
+                    { 1, "cuisinier", false, "Biscuit Double gingembre", null, 2.25, 3 },
+                    { 2, "cuisinier", false, "Biscuit Brisures de chocolat", null, 2.25, 3 },
+                    { 3, "cuisinier", false, "Biscuit Amaretti", null, 2.25, 3 },
+                    { 4, "cuisinier", false, "Biscuit S'mores au beurre noisette", null, 2.25, 3 },
+                    { 5, "cuisinier", false, "Biscuit Canneberges", null, 2.25, 3 }
                 });
 
             migrationBuilder.CreateIndex(

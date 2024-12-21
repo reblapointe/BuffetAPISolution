@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BuffetAPI.Migrations
 {
     [DbContext(typeof(BuffetAPIContext))]
-    [Migration("20241213144253_Plats")]
-    partial class Plats
+    [Migration("20241221030237_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,6 +67,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 1,
+                            CuisinierId = "cuisinier",
                             Mange = false,
                             Nom = "Biscuit Double gingembre",
                             Prix = 2.25,
@@ -75,6 +76,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 2,
+                            CuisinierId = "cuisinier",
                             Mange = false,
                             Nom = "Biscuit Brisures de chocolat",
                             Prix = 2.25,
@@ -83,6 +85,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 3,
+                            CuisinierId = "cuisinier",
                             Mange = false,
                             Nom = "Biscuit Amaretti",
                             Prix = 2.25,
@@ -91,6 +94,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 4,
+                            CuisinierId = "cuisinier",
                             Mange = false,
                             Nom = "Biscuit S'mores au beurre noisette",
                             Prix = 2.25,
@@ -99,6 +103,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 5,
+                            CuisinierId = "cuisinier",
                             Mange = false,
                             Nom = "Biscuit Canneberges",
                             Prix = 2.25,
@@ -168,19 +173,19 @@ namespace BuffetAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d8167db1-6ba2-4ab1-85d4-b59ec868e7f4",
+                            Id = "1cfb8740-1ce9-4997-ba28-c2539f92e7d3",
                             Name = "Administrateur",
                             NormalizedName = "ADMINISTRATEUR"
                         },
                         new
                         {
-                            Id = "58bf3f2c-150e-4863-9c0b-a18bfb17f398",
+                            Id = "0c944199-6b63-4042-a6b5-7d8bfb208602",
                             Name = "Cuisinier",
                             NormalizedName = "CUISINIER"
                         },
                         new
                         {
-                            Id = "7070fb5b-8146-44eb-8f98-7542e55dd618",
+                            Id = "744b93a7-b473-47b5-8ab5-d78363689662",
                             Name = "Ogre",
                             NormalizedName = "OGRE"
                         });
