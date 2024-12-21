@@ -28,7 +28,7 @@ namespace BuffetAPI.Controllers
         }
 
         // POST: api/Plats/manger/id
-        [HttpPost("manger")]
+        [HttpPost("manger/{id}")]
         public async Task<ActionResult<Plat>> Manger(int id)
         {
             var plat = await _context.Plat.FindAsync(id);

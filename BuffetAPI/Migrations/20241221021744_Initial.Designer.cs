@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BuffetAPI.Migrations
 {
     [DbContext(typeof(BuffetAPIContext))]
-    [Migration("20241209194036_roles")]
-    partial class roles
+    [Migration("20241221021744_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace BuffetAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BuffetAPI.Models.Plat", b =>
+            modelBuilder.Entity("BuffetAPI.Data.Plat", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,7 +33,11 @@ namespace BuffetAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Mange")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Nom")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("Prix")
@@ -52,6 +56,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 1,
+                            Mange = false,
                             Nom = "Biscuit Double gingembre",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -59,6 +64,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 2,
+                            Mange = false,
                             Nom = "Biscuit Brisures de chocolat",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -66,6 +72,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 3,
+                            Mange = false,
                             Nom = "Biscuit Amaretti",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -73,6 +80,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 4,
+                            Mange = false,
                             Nom = "Biscuit S'mores au beurre noisette",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -80,13 +88,14 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 5,
+                            Mange = false,
                             Nom = "Biscuit Canneberges",
                             Prix = 2.25,
                             TypePlatId = 3
                         });
                 });
 
-            modelBuilder.Entity("BuffetAPI.Models.TypePlat", b =>
+            modelBuilder.Entity("BuffetAPI.Data.TypePlat", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -148,19 +157,19 @@ namespace BuffetAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "db6bbf2e-5a54-433b-8b1a-c3a68f0a4ded",
+                            Id = "057e818f-3203-4dd8-b284-ce4132fd9d47",
                             Name = "Administrateurr",
                             NormalizedName = "ADMINISTRATEURR"
                         },
                         new
                         {
-                            Id = "68139d9a-da24-4876-b441-c2788ee16d48",
+                            Id = "d41e02b2-7acb-45e0-bc41-8fb5e9d90d66",
                             Name = "Cuisinier",
                             NormalizedName = "CUISINIER"
                         },
                         new
                         {
-                            Id = "8fb41309-af83-4723-a3f3-9620769561ef",
+                            Id = "553a1118-0a6c-433a-a345-81d7b6b0283c",
                             Name = "Ogre",
                             NormalizedName = "OGRE"
                         });
@@ -337,9 +346,9 @@ namespace BuffetAPI.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BuffetAPI.Models.Plat", b =>
+            modelBuilder.Entity("BuffetAPI.Data.Plat", b =>
                 {
-                    b.HasOne("BuffetAPI.Models.TypePlat", "TypePlat")
+                    b.HasOne("BuffetAPI.Data.TypePlat", "TypePlat")
                         .WithMany()
                         .HasForeignKey("TypePlatId")
                         .OnDelete(DeleteBehavior.Cascade)
