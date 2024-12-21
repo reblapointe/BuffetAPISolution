@@ -16,5 +16,6 @@ namespace BuffetAPI.Data
 
         [Timestamp]
         public byte[]? Version { get; set; }
+
     }
 }
