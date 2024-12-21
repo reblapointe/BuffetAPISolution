@@ -30,6 +30,9 @@ namespace BuffetAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Mange")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Nom")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -50,6 +53,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 1,
+                            Mange = false,
                             Nom = "Biscuit Double gingembre",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -57,6 +61,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 2,
+                            Mange = false,
                             Nom = "Biscuit Brisures de chocolat",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -64,6 +69,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 3,
+                            Mange = false,
                             Nom = "Biscuit Amaretti",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -71,6 +77,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 4,
+                            Mange = false,
                             Nom = "Biscuit S'mores au beurre noisette",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -78,6 +85,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 5,
+                            Mange = false,
                             Nom = "Biscuit Canneberges",
                             Prix = 2.25,
                             TypePlatId = 3

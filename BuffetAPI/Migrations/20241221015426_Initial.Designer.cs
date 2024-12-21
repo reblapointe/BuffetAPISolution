@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BuffetAPI.Migrations
 {
     [DbContext(typeof(BuffetAPIContext))]
-    [Migration("20241211153953_PlatNomObligatoire")]
-    partial class PlatNomObligatoire
+    [Migration("20241221015426_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,9 @@ namespace BuffetAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Mange")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Nom")
                         .IsRequired()
@@ -53,6 +56,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 1,
+                            Mange = false,
                             Nom = "Biscuit Double gingembre",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -60,6 +64,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 2,
+                            Mange = false,
                             Nom = "Biscuit Brisures de chocolat",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -67,6 +72,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 3,
+                            Mange = false,
                             Nom = "Biscuit Amaretti",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -74,6 +80,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 4,
+                            Mange = false,
                             Nom = "Biscuit S'mores au beurre noisette",
                             Prix = 2.25,
                             TypePlatId = 3
@@ -81,6 +88,7 @@ namespace BuffetAPI.Migrations
                         new
                         {
                             Id = 5,
+                            Mange = false,
                             Nom = "Biscuit Canneberges",
                             Prix = 2.25,
                             TypePlatId = 3
