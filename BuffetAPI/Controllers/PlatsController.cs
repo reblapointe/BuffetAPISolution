@@ -62,6 +62,8 @@ namespace BuffetAPI.Controllers
 
                 await _context.SaveChangesAsync();
 
+                _logger.LogInformation("{ogre} a mangé le plat #{id} : {nom}", plat.OgreId, id, plat.Nom);
+
                 return _mapper.Map<GetPlatDTO­>(plat);
             }
             catch (DbUpdateConcurrencyException ex)
