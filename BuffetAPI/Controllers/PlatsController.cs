@@ -20,7 +20,6 @@ namespace BuffetAPI.Controllers
         [HttpGet("citation")]
         public ActionResult<string> GetCitation()
         {
-            _logger.LogInformation("On m'a demandé la citation");
             return Ok("Bienvenue au buffet!");
         }
 
@@ -36,6 +35,7 @@ namespace BuffetAPI.Controllers
                 return NotFound(new { Message = "Le plat demandé n'existe pas, ou a déjà été mangé." });
             }
 
+            _logger.LogInformation("Le plat #{id} : {nom} a été mangé", id, plat.Nom);
             plat.Mange = true;
             await _context.SaveChangesAsync();
 
