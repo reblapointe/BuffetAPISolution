@@ -11,6 +11,7 @@ namespace BuffetAPI.Configurations
         public AutoMapperConfig()
         {
             CreateMap<Plat, PlatBaseDTO>().ReverseMap();
+            CreateMap<Plat, DetailsPlatDTO>().ReverseMap();
             CreateMap<Plat, GetPlatDTO>().ReverseMap();
             CreateMap<Plat, PostPlatDTO>().ReverseMap();
             CreateMap<Plat, PutPlatDTO>().ReverseMap();

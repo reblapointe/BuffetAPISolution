@@ -42,7 +42,7 @@ namespace BuffetAPI.Controllers
 
         // POST: api/Plats/manger/id
         [HttpPost("manger/{id}")]
-        public async Task<ActionResult<GetPlatDTO>> Manger(int id)
+        public async Task<ActionResult<DetailsPlatDTO>> Manger(int id)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace BuffetAPI.Controllers
 
                 _logger.LogInformation("{ogre} a mangé le plat #{id} : {nom}", plat.OgreId, id, plat.Nom);
 
-                return _mapper.Map<GetPlatDTO­>(plat);
+                return _mapper.Map<DetailsPlatDTO>(plat);
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -87,7 +87,7 @@ namespace BuffetAPI.Controllers
         // GET: api/Plats/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<GetPlatDTO>> GetPlat(int id)
+        public async Task<ActionResult<DetailsPlatDTO>> GetPlat(int id)
         {
             var plat = await _context.Plat.Include(p => p.TypePlat).FirstOrDefaultAsync(p => p.Id == id);
 
@@ -96,7 +96,7 @@ namespace BuffetAPI.Controllers
                 return NotFound();
             }
 
-            return _mapper.Map<GetPlatDTO­>(plat);
+            return _mapper.Map<DetailsPlatDTO>(plat);
         }
 
         // PUT: api/Plats/5
@@ -154,7 +154,7 @@ namespace BuffetAPI.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Roles = "Cuisinier,Administrateur")]
-        public async Task<ActionResult<GetPlatDTO>> PostPlat(PostPlatDTO platDto)
+        public async Task<ActionResult<DetailsPlatDTO>> PostPlat(PostPlatDTO platDto)
         {
             var plat = _mapper.Map<Plat>(platDto);
             plat.CuisinierId = GetUserName();
@@ -173,7 +173,7 @@ namespace BuffetAPI.Controllers
             _context.Plat.Add(plat);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPlat", new { id = plat.Id }, _mapper.Map<GetPlatDTO>(plat));
+            return CreatedAtAction("GetPlat", new { id = plat.Id }, _mapper.Map<DetailsPlatDTO>(plat));
         }
 
         // DELETE: api/Plats/5
