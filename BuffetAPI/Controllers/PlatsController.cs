@@ -47,6 +47,7 @@ namespace BuffetAPI.Controllers
             plat.Mange = true;
             plat.OgreId = GetUserName();
 
+            _logger.LogInformation("{ogre} a mangé le plat #{id} : {nom}", plat.OgreId, id, plat.Nom);
             await _context.SaveChangesAsync();
 
             return plat;
