@@ -34,7 +34,12 @@ namespace BuffetAPI
             builder.Services.AddSwaggerGen();
             builder.Host.UseSerilog((context, config) =>
             {
-                config.WriteTo.Console().ReadFrom.Configuration(context.Configuration);
+                config.WriteTo.Console()
+                .ReadFrom.Configuration(context.Configuration)
+                .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .Enrich.WithEnvironmentName()
+                .Enrich.WithProperty("ApplicationName", context.HostingEnvironment.ApplicationName);
             });
 
             builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
