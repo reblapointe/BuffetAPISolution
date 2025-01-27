@@ -27,7 +27,7 @@ namespace BuffetAPI.Controllers
                     ModelState.AddModelError(error.Code, error.Description);
                     s += error.Code + " " + error.Description + ", ";
                 }
-                _logger.LogError("Tentative d'enregistrement d'un nouveau cuisinier pour {email}, {name} échouée : {errors}",
+                _logger.LogError("Tentative d'enregistrement d'un nouvel ogre pour {email}, {name} échouée : {errors}",
                     register.Email, register.Username, s);
                 return BadRequest(ModelState);
             }

@@ -41,9 +41,16 @@ namespace BuffetAPI
                 .Enrich.WithEnvironmentName()
                 .Enrich.WithProperty("ApplicationName", context.HostingEnvironment.ApplicationName);
             });
-
             builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
+            var audience = builder.Configuration["JWT:Audience"];
+            var issuer = builder.Configuration["JWT:Issuer"];
+            var secret = builder.Configuration["JWT:Secret"];
+
+            if (string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(secret))
+            {
+                throw new InvalidOperationException("JWT configuration is missing required values.");
+            }
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,9 +65,9 @@ namespace BuffetAPI
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
-                        ValidAudience = builder.Configuration["JWT:Audience"],
-                        ValidIssuer = builder.Configuration["JWT:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+                        ValidAudience = audience,
+                        ValidIssuer = issuer,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
                     };
                 });
             builder.Services.AddScoped<IAuthManager, AuthManager>();

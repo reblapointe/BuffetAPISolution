@@ -18,18 +18,11 @@ namespace BuffetAPI.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class PlatsController : ControllerBase
+    public class PlatsController(BuffetAPIContext context, ILogger<PlatsController> logger, IMapper mapper) : ControllerBase
     {
-        private readonly BuffetAPIContext _context;
-        private readonly ILogger<PlatsController> _logger;
-        private readonly IMapper _mapper;
-
-        public PlatsController(BuffetAPIContext context, ILogger<PlatsController> logger, IMapper mapper)
-        {
-            _context = context;
-            _logger = logger;
-            _mapper = mapper;
-        }
+        private readonly BuffetAPIContext _context = context;
+        private readonly ILogger<PlatsController> _logger = logger;
+        private readonly IMapper _mapper = mapper;
 
         // GET: api/Plats/citation
         [HttpGet("citation")]
