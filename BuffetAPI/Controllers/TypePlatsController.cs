@@ -13,14 +13,9 @@ namespace BuffetAPI.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class TypePlatsController : ControllerBase
+    public class TypePlatsController(BuffetAPIContext context) : ControllerBase
     {
-        private readonly BuffetAPIContext _context;
-
-        public TypePlatsController(BuffetAPIContext context)
-        {
-            _context = context;
-        }
+        private readonly BuffetAPIContext _context = context;
 
         // GET: api/TypePlats
         [HttpGet]

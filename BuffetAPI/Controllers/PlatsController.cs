@@ -54,7 +54,7 @@ namespace BuffetAPI.Controllers
                 plat.OgreId = GetUserName();
 
                 await _context.SaveChangesAsync();
-
+                /*...*/
                 _logger.LogInformation("{ogre} a mangé le plat #{id} : {nom}", plat.OgreId, id, plat.Nom);
 
                 return _mapper.Map<DetailsPlatDTO>(plat);
@@ -102,7 +102,7 @@ namespace BuffetAPI.Controllers
             {
                 return BadRequest();
             }
-
+            /*...*/
             var plat = await _context.Plat.FindAsync(id);
             if (plat == null)
                 return BadRequest();

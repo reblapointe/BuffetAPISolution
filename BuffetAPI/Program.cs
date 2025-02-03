@@ -21,17 +21,17 @@ namespace BuffetAPI
                 options.UseSqlServer(builder.Configuration.GetConnectionString("BuffetAPIContext") ?? throw new InvalidOperationException("Connection string 'BuffetAPIContext' not found.")));
 
             // Add services to the container.
-            /**/
             builder.Services.AddIdentityCore<IdentityUser>()
                 .AddRoles<IdentityRole>()
-                /*?*/.AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("HotelListingApi")
+                .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("HotelListingApi")
                 .AddEntityFrameworkStores<BuffetAPIContext>()
                 .AddDefaultTokenProviders();
             builder.Services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            /*...*/
             builder.Services.AddSwaggerGen();
+
             builder.Host.UseSerilog((context, config) =>
             {
                 config.WriteTo.Console()
@@ -41,6 +41,7 @@ namespace BuffetAPI
                 .Enrich.WithEnvironmentName()
                 .Enrich.WithProperty("ApplicationName", context.HostingEnvironment.ApplicationName);
             });
+
             builder.Services.AddAutoMapper(typeof(AutoMapperConfig));
 
             var audience = builder.Configuration["JWT:Audience"];
@@ -48,31 +49,29 @@ namespace BuffetAPI
             var secret = builder.Configuration["JWT:Secret"];
 
             if (string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(secret))
-            {
                 throw new InvalidOperationException("JWT configuration is missing required values.");
-            }
+
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-                .AddJwtBearer(options =>
+            }).AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    options.SaveToken = true;
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidAudience = audience,
-                        ValidIssuer = issuer,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
-                    };
-                });
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = audience,
+                    ValidIssuer = issuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
+                };
+            });
             builder.Services.AddScoped<IAuthManager, AuthManager>();
             var app = builder.Build();
-            /*...*/
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -83,7 +82,6 @@ namespace BuffetAPI
 
             app.UseHttpsRedirection();
 
-            /**/
             app.UseAuthentication();
             app.UseAuthorization();
 

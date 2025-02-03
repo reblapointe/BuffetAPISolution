@@ -7,7 +7,7 @@ namespace BuffetAPI.Auth
     {
         Task<IEnumerable<IdentityError>> RegisterOgre(RegisterDTO register);
         Task<IEnumerable<IdentityError>> RegisterCuisinier(RegisterDTO register);
-        Task<AuthResponse> Login(LoginDTO login);
+        Task<AuthResponse?> Login(LoginDTO login);
 
     }
 }

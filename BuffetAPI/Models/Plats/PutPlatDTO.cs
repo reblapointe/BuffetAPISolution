@@ -7,7 +7,7 @@ namespace BuffetAPI.Models.Plats
     {
         public int Id { get; set; }
         public string? CuisinierId { get; set; }
-        public bool Mange { get; set; }
+        public bool Mange { get; set; } = false;
         public string? OgreId { get; set; }
     }
 }
