@@ -20,6 +20,8 @@ namespace BuffetAPI.Controllers
         [HttpGet("citation")]
         public ActionResult<string> GetCitation()
         {
+            _logger.LogInformation("Le client a demandé la citation");
+
             return Ok("Bienvenue au buffet!");
         }
 
